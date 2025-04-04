@@ -1,4 +1,4 @@
-import { r as registerInstance, g as getElement, h } from './index-_-tas1gg.js';
+import { r as registerInstance, g as getElement, h } from './index-DgWrjH6D.js';
 
 const myComponentCss = ":host{display:block}";
 
@@ -54,7 +54,7 @@ const MyComponent = class {
         }
     }
     render() {
-        return (h("div", { key: 'dbcc6f2fdb84b61c67bea0208fd0ff79c5e55a39' }, h("div", { key: '993340addb09feb43ebbdce849681f6c5ed55e49', id: "vue-counter" }), h("style", { key: '902cd767015a725a2680a67af3875283f1783c77' }, `
+        return (h("div", { key: 'fdd97322df4c613bc22361d4ecfc26a41c313011' }, h("div", { key: 'd38c07de83a847265797f6f0e4073b1a9bd6852a', id: "vue-counter" }), h("style", { key: '91a7115d91a635fa37c649f573b8a68d55998008' }, `
           .counter-container {
             padding: 20px;
             text-align: center;
@@ -90,6 +90,6 @@ const MyComponent = class {
 MyComponent.style = myComponentCss;
 
 export { MyComponent as my_component };
-//# sourceMappingURL=my-component.entry.esm.js.map
+//# sourceMappingURL=my-component.entry.js.map
 
 //# sourceMappingURL=my-component.entry.js.map
