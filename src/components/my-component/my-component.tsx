@@ -10,7 +10,7 @@ export class MyComponent {
   @State() count: number = 0;
 
   componentDidLoad() {
-    // Wait for Vue to be available
+    // Wait for Vue to be available and initialize the app
     const checkVue = () => {
       if ((window as any).Vue) {
         this.initializeVue();
