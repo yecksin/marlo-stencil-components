@@ -6,10 +6,18 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface MalMultiselect {
+    }
     interface MyComponent {
     }
 }
 declare global {
+    interface HTMLMalMultiselectElement extends Components.MalMultiselect, HTMLStencilElement {
+    }
+    var HTMLMalMultiselectElement: {
+        prototype: HTMLMalMultiselectElement;
+        new (): HTMLMalMultiselectElement;
+    };
     interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
     }
     var HTMLMyComponentElement: {
@@ -17,13 +25,17 @@ declare global {
         new (): HTMLMyComponentElement;
     };
     interface HTMLElementTagNameMap {
+        "mal-multiselect": HTMLMalMultiselectElement;
         "my-component": HTMLMyComponentElement;
     }
 }
 declare namespace LocalJSX {
+    interface MalMultiselect {
+    }
     interface MyComponent {
     }
     interface IntrinsicElements {
+        "mal-multiselect": MalMultiselect;
         "my-component": MyComponent;
     }
 }
@@ -31,6 +43,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "mal-multiselect": LocalJSX.MalMultiselect & JSXBase.HTMLAttributes<HTMLMalMultiselectElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
         }
     }

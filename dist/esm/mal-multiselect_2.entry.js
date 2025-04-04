@@ -1,4 +1,16 @@
-import { r as registerInstance, g as getElement, h } from './index-DgWrjH6D.js';
+import { r as registerInstance, h, g as getElement } from './index-DgWrjH6D.js';
+
+const malMultiselectCss = ":host{display:block}";
+
+const MalMultiselect = class {
+    constructor(hostRef) {
+        registerInstance(this, hostRef);
+    }
+    render() {
+        return h("h1", { key: '97edf002ad5fa3db6ad6b8a5b5f5de3168c2c978' }, "Hello World");
+    }
+};
+MalMultiselect.style = malMultiselectCss;
 
 const myComponentCss = ":host{display:block}";
 
@@ -9,7 +21,7 @@ const MyComponent = class {
     get el() { return getElement(this); }
     count = 0;
     componentDidLoad() {
-        // Wait for Vue to be available
+        // Wait for Vue to be available and initialize the app
         const checkVue = () => {
             if (window.Vue) {
                 this.initializeVue();
@@ -54,7 +66,7 @@ const MyComponent = class {
         }
     }
     render() {
-        return (h("div", { key: 'fdd97322df4c613bc22361d4ecfc26a41c313011' }, h("div", { key: 'd38c07de83a847265797f6f0e4073b1a9bd6852a', id: "vue-counter" }), h("style", { key: '91a7115d91a635fa37c649f573b8a68d55998008' }, `
+        return (h("div", { key: 'e0e4a7ac0f3d9f1c6c494700d2df6689369caa5d' }, h("div", { key: '7e46f240da2d34e601416a6d1a35d46be44c02f7', id: "vue-counter" }), h("style", { key: '7d923e34682dff8be910ba992fcdb1bbe6c1db04' }, `
           .counter-container {
             padding: 20px;
             text-align: center;
@@ -89,7 +101,7 @@ const MyComponent = class {
 };
 MyComponent.style = myComponentCss;
 
-export { MyComponent as my_component };
-//# sourceMappingURL=my-component.entry.js.map
+export { MalMultiselect as mal_multiselect, MyComponent as my_component };
+//# sourceMappingURL=mal-multiselect.my-component.entry.js.map
 
-//# sourceMappingURL=my-component.entry.js.map
+//# sourceMappingURL=mal-multiselect_2.entry.js.map

@@ -19,7 +19,7 @@ var patchBrowser = () => {
 
 patchBrowser().then(async (options) => {
   await appGlobals.globalScripts();
-  return index.bootstrapLazy([["my-component.cjs",[[1,"my-component",{"count":[32]}]]]], options);
+  return index.bootstrapLazy([["mal-multiselect_2.cjs",[[1,"mal-multiselect"],[1,"my-component",{"count":[32]}]]]], options);
 });
 
 exports.setNonce = index.setNonce;

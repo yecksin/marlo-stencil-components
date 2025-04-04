@@ -3,7 +3,7 @@ export class MyComponent {
     el;
     count = 0;
     componentDidLoad() {
-        // Wait for Vue to be available
+        // Wait for Vue to be available and initialize the app
         const checkVue = () => {
             if (window.Vue) {
                 this.initializeVue();
@@ -48,7 +48,7 @@ export class MyComponent {
         }
     }
     render() {
-        return (h("div", { key: 'fdd97322df4c613bc22361d4ecfc26a41c313011' }, h("div", { key: 'd38c07de83a847265797f6f0e4073b1a9bd6852a', id: "vue-counter" }), h("style", { key: '91a7115d91a635fa37c649f573b8a68d55998008' }, `
+        return (h("div", { key: 'e0e4a7ac0f3d9f1c6c494700d2df6689369caa5d' }, h("div", { key: '7e46f240da2d34e601416a6d1a35d46be44c02f7', id: "vue-counter" }), h("style", { key: '7d923e34682dff8be910ba992fcdb1bbe6c1db04' }, `
           .counter-container {
             padding: 20px;
             text-align: center;

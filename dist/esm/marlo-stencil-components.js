@@ -17,7 +17,7 @@ var patchBrowser = () => {
 
 patchBrowser().then(async (options) => {
   await globalScripts();
-  return bootstrapLazy([["my-component",[[1,"my-component",{"count":[32]}]]]], options);
+  return bootstrapLazy([["mal-multiselect_2",[[1,"mal-multiselect"],[1,"my-component",{"count":[32]}]]]], options);
 });
 //# sourceMappingURL=marlo-stencil-components.js.map
 

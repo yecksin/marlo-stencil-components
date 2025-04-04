@@ -5,7 +5,7 @@ import { g as globalScripts } from './app-globals-DQuL1Twl.js';
 const defineCustomElements = async (win, options) => {
   if (typeof window === 'undefined') return undefined;
   await globalScripts();
-  return bootstrapLazy([["my-component",[[1,"my-component",{"count":[32]}]]]], options);
+  return bootstrapLazy([["mal-multiselect_2",[[1,"mal-multiselect"],[1,"my-component",{"count":[32]}]]]], options);
 };
 
 export { defineCustomElements };

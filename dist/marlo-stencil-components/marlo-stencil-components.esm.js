@@ -1,2 +1,2 @@
-import{p as r,b as o}from"./p-DgWrjH6D.js";export{s as setNonce}from"./p-DgWrjH6D.js";import{g as t}from"./p-DQuL1Twl.js";var a=()=>{const o=import.meta.url;const t={};if(o!==""){t.resourcesUrl=new URL(".",o).href}return r(t)};a().then((async r=>{await t();return o([["p-2b114ad4",[[1,"my-component",{count:[32]}]]]],r)}));
+import{p as t,b as r}from"./p-DgWrjH6D.js";export{s as setNonce}from"./p-DgWrjH6D.js";import{g as o}from"./p-DQuL1Twl.js";var a=()=>{const r=import.meta.url;const o={};if(r!==""){o.resourcesUrl=new URL(".",r).href}return t(o)};a().then((async t=>{await o();return r([["p-adeb4684",[[1,"mal-multiselect"],[1,"my-component",{count:[32]}]]]],t)}));
 //# sourceMappingURL=marlo-stencil-components.esm.js.map
