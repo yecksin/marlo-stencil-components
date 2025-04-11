@@ -1,6 +1,8 @@
 {
   "entries": [
+    "components/mal-input/mal-input.js",
     "components/mal-multiselect/mal-multiselect.js",
+    "components/mal-select/mal-select.js",
     "components/my-component/my-component.js"
   ],
   "compiler": {

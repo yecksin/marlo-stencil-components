@@ -1,4 +1,4 @@
-import { p as proxyCustomElement, H, h } from './p-htVXLZqF.js';
+import { p as proxyCustomElement, H, h } from './p-BrZfTsvc.js';
 
 const malMultiselectCss = ":host{display:block}";
 
@@ -9,7 +9,7 @@ const MalMultiselect$1 = /*@__PURE__*/ proxyCustomElement(class MalMultiselect e
         this.__attachShadow();
     }
     render() {
-        return h("h1", { key: '97edf002ad5fa3db6ad6b8a5b5f5de3168c2c978' }, "Hello World");
+        return h("h1", { key: '867c2b602281f5373d82dc5ce382e644eda998d2' }, "Hello World");
     }
     static get style() { return malMultiselectCss; }
 }, [1, "mal-multiselect"]);

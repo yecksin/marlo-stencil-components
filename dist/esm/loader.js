@@ -1,11 +1,11 @@
-import { b as bootstrapLazy } from './index-DgWrjH6D.js';
-export { s as setNonce } from './index-DgWrjH6D.js';
+import { b as bootstrapLazy } from './index-9Jp86m78.js';
+export { s as setNonce } from './index-9Jp86m78.js';
 import { g as globalScripts } from './app-globals-DQuL1Twl.js';
 
 const defineCustomElements = async (win, options) => {
   if (typeof window === 'undefined') return undefined;
   await globalScripts();
-  return bootstrapLazy([["mal-multiselect_2",[[1,"mal-multiselect"],[1,"my-component",{"count":[32]}]]]], options);
+  return bootstrapLazy([["mal-multiselect_3",[[1,"mal-multiselect"],[0,"mal-select",{"name":[1],"data":[16],"value":[1032]},null,{"data":["onPropsChange"],"value":["onPropsChange"]}],[1,"my-component",{"count":[32]}]]],["mal-input",[[1,"mal-input"]]]], options);
 };
 
 export { defineCustomElements };

@@ -1,5 +1,5 @@
 const NAMESPACE = 'marlo-stencil-components';
-const BUILD = /* marlo-stencil-components */ { hydratedSelectorName: "hydrated", updatable: true, watchCallback: false };
+const BUILD = /* marlo-stencil-components */ { hydratedSelectorName: "hydrated", lazyLoad: true, updatable: true};
 
 /*
  Stencil Client Platform v4.29.0 | MIT Licensed | https://stenciljs.com
@@ -291,11 +291,29 @@ var Host = {};
 var isHost = (node) => node && node.$tag$ === Host;
 var parsePropertyValue = (propValue, propType) => {
   if (propValue != null && !isComplexType(propValue)) {
+    if (propType & 1 /* String */) {
+      return String(propValue);
+    }
     return propValue;
   }
   return propValue;
 };
 var getElement = (ref) => getHostRef(ref).$hostElement$ ;
+
+// src/runtime/event-emitter.ts
+var createEvent = (ref, name, flags) => {
+  const elm = getElement(ref);
+  return {
+    emit: (detail) => {
+      return emitEvent(elm, name, {
+        bubbles: true,
+        composed: true,
+        cancelable: true,
+        detail
+      });
+    }
+  };
+};
 var emitEvent = (elm, name, opts) => {
   const ev = plt.ce(name, opts);
   elm.dispatchEvent(ev);
@@ -403,7 +421,11 @@ var setAccessor = (elm, memberName, oldValue, newValue, isSvg, flags, initialRen
   }
   let isProp = isMemberInElement(elm, memberName);
   memberName.toLowerCase();
-  if (memberName === "key") ; else {
+  if (memberName === "key") ; else if (memberName === "ref") {
+    if (newValue) {
+      newValue(elm);
+    }
+  } else {
     const isComplex = isComplexType(newValue);
     if ((isProp || isComplex && newValue !== null) && true) {
       try {
@@ -530,6 +552,7 @@ var removeVnodes = (vnodes, startIdx, endIdx) => {
     const vnode = vnodes[index];
     if (vnode) {
       const elm = vnode.$elm$;
+      nullifyVNodeRefs(vnode);
       if (elm) {
         elm.remove();
       }
@@ -656,6 +679,12 @@ var patch = (oldVNode, newVNode2, isInitialRender = false) => {
     }
   } else if (oldVNode.$text$ !== text) {
     elm.data = text;
+  }
+};
+var nullifyVNodeRefs = (vNode) => {
+  {
+    vNode.$attrs$ && vNode.$attrs$.ref && vNode.$attrs$.ref(null);
+    vNode.$children$ && vNode.$children$.map(nullifyVNodeRefs);
   }
 };
 var insertBefore = (parent, newNode, reference) => {
@@ -845,15 +874,28 @@ var setValue = (ref, propName, newVal, cmpMeta) => {
       `Couldn't find host element for "${cmpMeta.$tagName$}" as it is unknown to this Stencil runtime. This usually happens when integrating a 3rd party Stencil component with another Stencil component or application. Please reach out to the maintainers of the 3rd party Stencil component or report this on the Stencil Discord server (https://chat.stenciljs.com) or comment on this similar [GitHub issue](https://github.com/stenciljs/core/issues/5457).`
     );
   }
+  const elm = hostRef.$hostElement$ ;
   const oldVal = hostRef.$instanceValues$.get(propName);
   const flags = hostRef.$flags$;
   const instance = hostRef.$lazyInstance$ ;
-  newVal = parsePropertyValue(newVal);
+  newVal = parsePropertyValue(newVal, cmpMeta.$members$[propName][0]);
   const areBothNaN = Number.isNaN(oldVal) && Number.isNaN(newVal);
   const didValueChange = newVal !== oldVal && !areBothNaN;
   if ((!(flags & 8 /* isConstructingInstance */) || oldVal === void 0) && didValueChange) {
     hostRef.$instanceValues$.set(propName, newVal);
     if (instance) {
+      if (cmpMeta.$watchers$ && flags & 128 /* isWatchReady */) {
+        const watchMethods = cmpMeta.$watchers$[propName];
+        if (watchMethods) {
+          watchMethods.map((watchMethodName) => {
+            try {
+              instance[watchMethodName](newVal, oldVal, propName);
+            } catch (e) {
+              consoleError(e, elm);
+            }
+          });
+        }
+      }
       if ((flags & (2 /* hasRendered */ | 16 /* isQueuedForUpdate */)) === 2 /* hasRendered */) {
         if (instance.componentShouldUpdate) {
           if (instance.componentShouldUpdate(newVal, oldVal, propName) === false) {
@@ -868,9 +910,12 @@ var setValue = (ref, propName, newVal, cmpMeta) => {
 
 // src/runtime/proxy-component.ts
 var proxyComponent = (Cstr, cmpMeta, flags) => {
-  var _a;
+  var _a, _b;
   const prototype = Cstr.prototype;
-  if (cmpMeta.$members$ || BUILD.watchCallback) {
+  if (cmpMeta.$members$ || (cmpMeta.$watchers$ || Cstr.watchers)) {
+    if (Cstr.watchers && !cmpMeta.$watchers$) {
+      cmpMeta.$watchers$ = Cstr.watchers;
+    }
     const members = Object.entries((_a = cmpMeta.$members$) != null ? _a : {});
     members.map(([memberName, [memberFlags]]) => {
       if ((memberFlags & 31 /* Prop */ || (flags & 2 /* proxyState */) && memberFlags & 32 /* State */)) {
@@ -904,7 +949,7 @@ var proxyComponent = (Cstr, cmpMeta, flags) => {
               } else if (!ref.$instanceValues$.get(memberName) && currentValue) {
                 ref.$instanceValues$.set(memberName, currentValue);
               }
-              origSetter.apply(this, [parsePropertyValue(newValue)]);
+              origSetter.apply(this, [parsePropertyValue(newValue, memberFlags)]);
               newValue = memberFlags & 32 /* State */ ? this[memberName] : ref.$hostElement$[memberName];
               setValue(this, memberName, newValue, cmpMeta);
               return;
@@ -926,7 +971,7 @@ var proxyComponent = (Cstr, cmpMeta, flags) => {
                 if (!ref.$instanceValues$.get(memberName) && currentValue) {
                   ref.$instanceValues$.set(memberName, currentValue);
                 }
-                ref.$lazyInstance$[memberName] = parsePropertyValue(newValue);
+                ref.$lazyInstance$[memberName] = parsePropertyValue(newValue, memberFlags);
                 setValue(this, memberName, ref.$lazyInstance$[memberName], cmpMeta);
               };
               if (ref.$lazyInstance$) {
@@ -939,6 +984,50 @@ var proxyComponent = (Cstr, cmpMeta, flags) => {
         });
       }
     });
+    if ((flags & 1 /* isElementConstructor */)) {
+      const attrNameToPropName = /* @__PURE__ */ new Map();
+      prototype.attributeChangedCallback = function(attrName, oldValue, newValue) {
+        plt.jmp(() => {
+          var _a2;
+          const propName = attrNameToPropName.get(attrName);
+          if (this.hasOwnProperty(propName) && BUILD.lazyLoad) {
+            newValue = this[propName];
+            delete this[propName];
+          } else if (prototype.hasOwnProperty(propName) && typeof this[propName] === "number" && // cast type to number to avoid TS compiler issues
+          this[propName] == newValue) {
+            return;
+          } else if (propName == null) {
+            const hostRef = getHostRef(this);
+            const flags2 = hostRef == null ? void 0 : hostRef.$flags$;
+            if (flags2 && !(flags2 & 8 /* isConstructingInstance */) && flags2 & 128 /* isWatchReady */ && newValue !== oldValue) {
+              const instance = hostRef.$lazyInstance$ ;
+              const entry = (_a2 = cmpMeta.$watchers$) == null ? void 0 : _a2[attrName];
+              entry == null ? void 0 : entry.forEach((callbackName) => {
+                if (instance[callbackName] != null) {
+                  instance[callbackName].call(instance, newValue, oldValue, attrName);
+                }
+              });
+            }
+            return;
+          }
+          const propDesc = Object.getOwnPropertyDescriptor(prototype, propName);
+          newValue = newValue === null && typeof this[propName] === "boolean" ? false : newValue;
+          if (newValue !== this[propName] && (!propDesc.get || !!propDesc.set)) {
+            this[propName] = newValue;
+          }
+        });
+      };
+      Cstr.observedAttributes = Array.from(
+        /* @__PURE__ */ new Set([
+          ...Object.keys((_b = cmpMeta.$watchers$) != null ? _b : {}),
+          ...members.filter(([_, m]) => m[0] & 15 /* HasAttribute */).map(([propName, m]) => {
+            const attrName = m[1] || propName;
+            attrNameToPropName.set(attrName, propName);
+            return attrName;
+          })
+        ])
+      );
+    }
   }
   return Cstr;
 };
@@ -962,6 +1051,9 @@ var initializeComponent = async (elm, hostRef, cmpMeta, hmrVersionId) => {
         throw new Error(`Constructor for "${cmpMeta.$tagName$}#${hostRef.$modeName$}" was not found`);
       }
       if (!Cstr.isProxied) {
+        {
+          cmpMeta.$watchers$ = Cstr.watchers;
+        }
         proxyComponent(Cstr, cmpMeta, 2 /* proxyState */);
         Cstr.isProxied = true;
       }
@@ -976,6 +1068,9 @@ var initializeComponent = async (elm, hostRef, cmpMeta, hmrVersionId) => {
       }
       {
         hostRef.$flags$ &= -9 /* isConstructingInstance */;
+      }
+      {
+        hostRef.$flags$ |= 128 /* isWatchReady */;
       }
       endNewInstance();
       fireConnectedCallback(hostRef.$lazyInstance$, elm);
@@ -1027,6 +1122,15 @@ var connectedCallback = (elm) => {
             break;
           }
         }
+      }
+      if (cmpMeta.$members$) {
+        Object.entries(cmpMeta.$members$).map(([memberName, [memberFlags]]) => {
+          if (memberFlags & 31 /* Prop */ && elm.hasOwnProperty(memberName)) {
+            const value = elm[memberName];
+            delete elm[memberName];
+            elm[memberName] = value;
+          }
+        });
       }
       {
         initializeComponent(elm, hostRef, cmpMeta);
@@ -1085,6 +1189,7 @@ var bootstrapLazy = (lazyBundles, options = {}) => {
   let hasSlotRelocation = false;
   lazyBundles.map((lazyBundle) => {
     lazyBundle[1].map((compactMeta) => {
+      var _a2;
       const cmpMeta = {
         $flags$: compactMeta[0],
         $tagName$: compactMeta[1],
@@ -1096,6 +1201,9 @@ var bootstrapLazy = (lazyBundles, options = {}) => {
       }
       {
         cmpMeta.$members$ = compactMeta[2];
+      }
+      {
+        cmpMeta.$watchers$ = (_a2 = compactMeta[4]) != null ? _a2 : {};
       }
       const tagName = cmpMeta.$tagName$;
       const HostElement = class extends HTMLElement {
@@ -1194,7 +1302,7 @@ var bootstrapLazy = (lazyBundles, options = {}) => {
 // src/runtime/nonce.ts
 var setNonce = (nonce) => plt.$nonce$ = nonce;
 
-export { bootstrapLazy as b, getElement as g, h, promiseResolve as p, registerInstance as r, setNonce as s };
-//# sourceMappingURL=index-DgWrjH6D.js.map
+export { Host as H, bootstrapLazy as b, createEvent as c, getElement as g, h, promiseResolve as p, registerInstance as r, setNonce as s };
+//# sourceMappingURL=index-9Jp86m78.js.map
 
-//# sourceMappingURL=index-DgWrjH6D.js.map
+//# sourceMappingURL=index-9Jp86m78.js.map

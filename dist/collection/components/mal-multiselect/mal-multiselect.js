@@ -1,7 +1,7 @@
 import { h } from "@stencil/core";
 export class MalMultiselect {
     render() {
-        return h("h1", { key: '97edf002ad5fa3db6ad6b8a5b5f5de3168c2c978' }, "Hello World");
+        return h("h1", { key: '867c2b602281f5373d82dc5ce382e644eda998d2' }, "Hello World");
     }
     static get is() { return "mal-multiselect"; }
     static get encapsulation() { return "shadow"; }

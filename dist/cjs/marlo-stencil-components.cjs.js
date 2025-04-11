@@ -1,6 +1,6 @@
 'use strict';
 
-var index = require('./index-BfU-_3Lp.js');
+var index = require('./index-DaAM2hds.js');
 var appGlobals = require('./app-globals-V2Kpy_OQ.js');
 
 var _documentCurrentScript = typeof document !== 'undefined' ? document.currentScript : null;
@@ -19,7 +19,7 @@ var patchBrowser = () => {
 
 patchBrowser().then(async (options) => {
   await appGlobals.globalScripts();
-  return index.bootstrapLazy([["mal-multiselect_2.cjs",[[1,"mal-multiselect"],[1,"my-component",{"count":[32]}]]]], options);
+  return index.bootstrapLazy([["mal-multiselect_3.cjs",[[1,"mal-multiselect"],[0,"mal-select",{"name":[1],"data":[16],"value":[1032]},null,{"data":["onPropsChange"],"value":["onPropsChange"]}],[1,"my-component",{"count":[32]}]]],["mal-input.cjs",[[1,"mal-input"]]]], options);
 });
 
 exports.setNonce = index.setNonce;
