@@ -1,9 +1,4 @@
 import { Host, h } from "@stencil/core";
-import { Dropdown } from "primereact/dropdown";
-import "primereact/resources/themes/lara-light-indigo/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
-import { createReactComponent } from "../../utils/react-wrapper/react-wrapper";
 export class MalSelect {
     el;
     /**
@@ -22,51 +17,88 @@ export class MalSelect {
      * Event emitted when the selection changes
      */
     valueChange;
-    /**
-     * Container for the React component
-     */
-    container;
-    /**
-     * Function to clean up React component
-     */
-    cleanup;
-    /**
-     * Component lifecycle methods
-     */
+    reactApp = null;
     componentDidLoad() {
-        this.renderReactComponent();
+        // Wait for React and PrimeReact to be available, then initialize
+        const checkReact = () => {
+            if (window.React && window.ReactDOM && window.primereact) {
+                this.initializeReactDropdown();
+            }
+            else {
+                setTimeout(checkReact, 100);
+            }
+        };
+        checkReact();
     }
     disconnectedCallback() {
-        if (this.cleanup) {
-            this.cleanup();
+        // Clean up React component when element is removed
+        if (this.reactApp && window.ReactDOM) {
+            window.ReactDOM.unmountComponentAtNode(this.el.querySelector('#react-dropdown'));
         }
     }
     onPropsChange() {
-        this.renderReactComponent();
+        // Re-render when props change
+        this.initializeReactDropdown();
     }
-    /**
-     * Render the React component
-     */
-    renderReactComponent() {
-        if (this.cleanup) {
-            this.cleanup();
+    initializeReactDropdown() {
+        const React = window.React;
+        const ReactDOM = window.ReactDOM;
+        // Check if primereact is available
+        if (!React || !ReactDOM) {
+            console.error('React or ReactDOM not found');
+            return;
         }
-        if (this.container) {
-            this.cleanup = createReactComponent(this.container, Dropdown, {
-                name: this.name,
-                options: this.data,
-                value: this.value,
-                onChange: (e) => {
-                    this.value = e.value;
-                    this.valueChange.emit(e.value);
-                },
-                optionLabel: 'label', // Assuming your data has a 'label' property
-                className: 'w-full md:w-14rem',
-            });
+        // Ensure primereact global object exists
+        const primereact = window.primereact || {};
+        // Create a complete mock of the style system if needed
+        const createEmptyStyleHook = () => ({
+            bind: () => { },
+            unbind: () => { },
+            value: {}
+        });
+        // Create or extend core if needed
+        if (!primereact.core) {
+            primereact.core = {};
+        }
+        // Setup complete style system mocks
+        primereact.core.useStyle = primereact.core.useStyle || createEmptyStyleHook;
+        primereact.core.useMountEffect = primereact.core.useMountEffect || function (fn) { setTimeout(fn, 0); };
+        primereact.core.ObjectUtils = primereact.core.ObjectUtils || {
+            equals: (a, b) => JSON.stringify(a) === JSON.stringify(b),
+            isEmpty: (value) => value === null || value === undefined || value === ''
+        };
+        // Get PrimeReact Dropdown from either individual component or full bundle
+        const PrimeDropdown = primereact.dropdown?.Dropdown || primereact.Dropdown;
+        if (!PrimeDropdown) {
+            console.error('PrimeReact Dropdown not found');
+            return;
+        }
+        // Use simple props to avoid style system dependencies
+        const dropdown = React.createElement(PrimeDropdown, {
+            name: this.name,
+            options: this.data,
+            value: this.value,
+            onChange: (e) => {
+                this.value = e.value;
+                this.valueChange.emit(e.value);
+            },
+            optionLabel: 'label',
+            className: 'w-full',
+        });
+        // Find container element
+        const container = this.el.querySelector('#react-dropdown');
+        if (container) {
+            // Use try/catch to handle potential render errors
+            try {
+                ReactDOM.render(dropdown, container);
+            }
+            catch (err) {
+                console.error('Error rendering PrimeReact dropdown:', err);
+            }
         }
     }
     render() {
-        return (h(Host, { key: '5d54f86d25e9fed371f02f0686f27fa5a461411c' }, h("div", { key: '8e5c14f842f9c80341351a81c0165edf02f9ab32', ref: (el) => this.container = el })));
+        return (h(Host, { key: '5f9332f17669b425ee0decc91ee1e49aeaa636d5' }, h("div", { key: '9153a1ccf1552358f36f82b93a8d27edd40ec5a7', id: "react-dropdown" })));
     }
     static get is() { return "mal-select"; }
     static get originalStyleUrls() {

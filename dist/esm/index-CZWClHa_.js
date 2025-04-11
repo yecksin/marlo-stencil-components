@@ -1,5 +1,3 @@
-'use strict';
-
 const NAMESPACE = 'marlo-stencil-components';
 const BUILD = /* marlo-stencil-components */ { hydratedSelectorName: "hydrated", lazyLoad: true, updatable: true};
 
@@ -423,11 +421,7 @@ var setAccessor = (elm, memberName, oldValue, newValue, isSvg, flags, initialRen
   }
   let isProp = isMemberInElement(elm, memberName);
   memberName.toLowerCase();
-  if (memberName === "key") ; else if (memberName === "ref") {
-    if (newValue) {
-      newValue(elm);
-    }
-  } else {
+  if (memberName === "key") ; else {
     const isComplex = isComplexType(newValue);
     if ((isProp || isComplex && newValue !== null) && true) {
       try {
@@ -554,7 +548,6 @@ var removeVnodes = (vnodes, startIdx, endIdx) => {
     const vnode = vnodes[index];
     if (vnode) {
       const elm = vnode.$elm$;
-      nullifyVNodeRefs(vnode);
       if (elm) {
         elm.remove();
       }
@@ -681,12 +674,6 @@ var patch = (oldVNode, newVNode2, isInitialRender = false) => {
     }
   } else if (oldVNode.$text$ !== text) {
     elm.data = text;
-  }
-};
-var nullifyVNodeRefs = (vNode) => {
-  {
-    vNode.$attrs$ && vNode.$attrs$.ref && vNode.$attrs$.ref(null);
-    vNode.$children$ && vNode.$children$.map(nullifyVNodeRefs);
   }
 };
 var insertBefore = (parent, newNode, reference) => {
@@ -1304,14 +1291,7 @@ var bootstrapLazy = (lazyBundles, options = {}) => {
 // src/runtime/nonce.ts
 var setNonce = (nonce) => plt.$nonce$ = nonce;
 
-exports.Host = Host;
-exports.bootstrapLazy = bootstrapLazy;
-exports.createEvent = createEvent;
-exports.getElement = getElement;
-exports.h = h;
-exports.promiseResolve = promiseResolve;
-exports.registerInstance = registerInstance;
-exports.setNonce = setNonce;
-//# sourceMappingURL=index-DaAM2hds.js.map
+export { Host as H, bootstrapLazy as b, createEvent as c, getElement as g, h, promiseResolve as p, registerInstance as r, setNonce as s };
+//# sourceMappingURL=index-CZWClHa_.js.map
 
-//# sourceMappingURL=index-DaAM2hds.js.map
+//# sourceMappingURL=index-CZWClHa_.js.map

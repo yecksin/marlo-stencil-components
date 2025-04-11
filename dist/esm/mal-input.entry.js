@@ -1,4 +1,4 @@
-import { r as registerInstance, h, H as Host } from './index-9Jp86m78.js';
+import { r as registerInstance, h, H as Host } from './index-CZWClHa_.js';
 
 const malInputCss = ":host{display:block}";
 

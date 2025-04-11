@@ -1,4 +1,4 @@
-import { p as proxyCustomElement, H, h, c as Host } from './p-BrZfTsvc.js';
+import { p as proxyCustomElement, H, h, c as Host } from './p-LfeK-xMb.js';
 
 const malInputCss = ":host{display:block}";
 

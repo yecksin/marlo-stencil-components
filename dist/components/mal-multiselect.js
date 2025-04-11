@@ -1,4 +1,4 @@
-import { p as proxyCustomElement, H, h } from './p-BrZfTsvc.js';
+import { p as proxyCustomElement, H, h } from './p-LfeK-xMb.js';
 
 const malMultiselectCss = ":host{display:block}";
 

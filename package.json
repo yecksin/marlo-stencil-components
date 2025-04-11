@@ -21,7 +21,8 @@
       "import": "./loader/index.js",
       "require": "./loader/index.cjs",
       "types": "./loader/index.d.ts"
-    }
+    },
+    "./components": "./dist/components/index.js"
   },
   "repository": {
     "type": "git",
@@ -50,9 +51,6 @@
   "license": "MIT",
   "dependencies": {
     "prettier": "^3.5.3",
-    "primeicons": "^7.0.0",
-    "primereact": "^10.9.4",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "primeicons": "^7.0.0"
   }
 }

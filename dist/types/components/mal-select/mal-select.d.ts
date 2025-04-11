@@ -1,7 +1,4 @@
 import { EventEmitter } from '../../stencil-public-runtime';
-import 'primereact/resources/themes/lara-light-indigo/theme.css';
-import 'primereact/resources/primereact.min.css';
-import 'primeicons/primeicons.css';
 export declare class MalSelect {
     el: HTMLElement;
     /**
@@ -20,23 +17,10 @@ export declare class MalSelect {
      * Event emitted when the selection changes
      */
     valueChange: EventEmitter<any>;
-    /**
-     * Container for the React component
-     */
-    private container?;
-    /**
-     * Function to clean up React component
-     */
-    private cleanup?;
-    /**
-     * Component lifecycle methods
-     */
+    private reactApp;
     componentDidLoad(): void;
     disconnectedCallback(): void;
     onPropsChange(): void;
-    /**
-     * Render the React component
-     */
-    private renderReactComponent;
+    private initializeReactDropdown;
     render(): any;
 }
