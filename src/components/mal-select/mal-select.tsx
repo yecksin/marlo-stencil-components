@@ -109,6 +109,9 @@ export class MalSelect {
       optionLabel: 'label',
       className: 'w-full',
       placeholder: 'Select an option',
+      filter: true,
+      filterPlaceholder: 'Search...',
+      filterInputAutoFocus: true,
       virtualScrollerOptions: { itemSize: 25 },
     });
 
