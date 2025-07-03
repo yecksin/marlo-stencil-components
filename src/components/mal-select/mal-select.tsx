@@ -112,7 +112,12 @@ export class MalSelect {
       filter: true,
       filterPlaceholder: 'Search...',
       filterInputAutoFocus: true,
-      virtualScrollerOptions: { itemSize: 25 },
+      virtualScrollerOptions: { 
+        itemSize: 25,
+        showLoader: true,
+        loadingTemplate: loadingTemplate,
+        delay: 25,
+      },
     });
 
     // Find container element
@@ -135,3 +140,41 @@ export class MalSelect {
     );
   }
 }
+
+const loadingTemplate = (options: any) => {
+
+  const React = (window as any).React;
+  const ReactDOM = (window as any).ReactDOM;
+
+  // Check if primereact is available
+  if (!React || !ReactDOM) {
+    console.error('React or ReactDOM not found');
+    return;
+  }
+
+  // Ensure primereact global object exists
+  const primereact = (window as any).primereact || {};
+
+  const Skeleton = primereact.skeleton?.Skeleton || primereact.Skeleton;
+
+  if (!Skeleton) {
+    console.error('PrimeReact Skeleton not found');
+    return;
+  }
+
+  // Use React.createElement instead of JSX to avoid Stencil compilation
+  return React.createElement('div', {
+    className: 'flex align-items-center p-2 justify-content-center',
+    style: {  
+      height: '25px',
+      backgroundColor: options.odd ? '#fff' : '#fafafa', // Use actual color values instead of Tailwind classes
+    }
+  }, React.createElement(Skeleton, {
+      style: {
+        width: '50%',
+        borderRadius: '0.375rem',
+        padding: '0.25rem 0.25rem',
+        margin: '0.25rem 0',
+      }
+  }));
+};

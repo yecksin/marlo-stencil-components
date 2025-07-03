@@ -74,14 +74,14 @@
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         const dropdown = document.getElementById('test-select');
-        
-        // Set data for the dropdown
-        dropdown.data = [
-          { label: 'United States', value: 'us' },
-          { label: 'Canada', value: 'ca' },
-          { label: 'United Kingdom', value: 'uk' },
-          { label: 'Germany', value: 'de' }
-        ];
+
+        // Create a random data set of 9999 items for the dropdown
+        const data = Array.from({ length: 999999 }, (_, i) => ({
+          label: `Option ${i + 1}`,
+          value: `option-${i + 1}`
+        }));
+
+        dropdown.data = data;
         
         // Set initial value
         dropdown.value = 'ca';
